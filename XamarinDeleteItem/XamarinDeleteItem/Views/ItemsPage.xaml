@@ -25,8 +25,14 @@
                 SelectionMode="Multiple">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout Padding="10" x:DataType="model:Item">
-                        <Label x:Name="Label1" Text="{Binding Text}" 
+                    <SwipeView BindingContext="{Binding .}">
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="Delete" Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemsViewModel}}, Path=Items}" CommandParameter="{Binding .}" BackgroundColor="Red" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <StackLayout Padding="10" x:DataType="model:Item">
+                            <Label Text="{Binding Text}" 
                             LineBreakMode="NoWrap" Padding="0"
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="16" />
@@ -34,14 +40,15 @@
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="13" />
-                        <!--<StackLayout.GestureRecognizers>
+                        <StackLayout.GestureRecognizers>
                                 <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemsViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
                                 </TapGestureRecognizer>
-                            </StackLayout.GestureRecognizers>-->
-                    </StackLayout>
+                            </StackLayout.GestureRecognizers>
+                        </StackLayout>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

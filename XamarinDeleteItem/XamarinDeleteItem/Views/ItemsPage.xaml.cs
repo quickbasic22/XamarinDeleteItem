@@ -29,9 +29,6 @@ namespace XamarinDeleteItem.Views
             _viewModel.OnAppearing();
         }
 
-        private void DeleteClick_Clicked(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
