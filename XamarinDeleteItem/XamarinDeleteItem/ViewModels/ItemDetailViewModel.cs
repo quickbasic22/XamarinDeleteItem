@@ -12,6 +12,19 @@ namespace XamarinDeleteItem.ViewModels
         private string itemId;
         private string text;
         private string description;
+        public Command DeleteCommand { get; set; }
+
+        public ItemDetailViewModel()
+        {
+            DeleteCommand = new Command(OnDelete);
+        }
+
+        private void OnDelete()
+        {
+            DataStore.DeleteItemAsync(Id);
+            Shell.Current.GoToAsync("..");
+        }
+
         public string Id { get; set; }
 
         public string Text
