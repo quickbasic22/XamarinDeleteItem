@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -41,6 +42,20 @@ namespace XamarinDeleteItem.Views
 
             _viewModel.Items.Remove(i);
             _viewModel.DataStore.DeleteItemAsync(i.Id);
+        }
+
+        private void ItemsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var Items = (IReadOnlyList<object>)e.CurrentSelection;
+
+            if (Items != null)
+            {
+                _viewModel.SelectedItem = new ObservableCollection<Item>();
+                foreach (Item item in Items)
+                {
+                    _viewModel.SelectedItem.Add(item);
+                }
+            }
         }
     }
 }

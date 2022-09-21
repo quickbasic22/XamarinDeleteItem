@@ -13,11 +13,11 @@ namespace XamarinDeleteItem.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
-        private Item _selectedItem;
+        private ObservableCollection<Item> _selectedItem;
         public ObservableCollection<Item> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
-        public Command<Item> ItemTapped { get; }
+        public Command DeleteSelected { get; }
         public Command<Item> DeleteCommand { get; }
 
         public ItemsViewModel()
@@ -25,17 +25,9 @@ namespace XamarinDeleteItem.ViewModels
             Title = "Browse";
             Items = new ObservableCollection<Item>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-
-            ItemTapped = new Command<Item>(OnItemSelected);
-
+            DeleteSelected = new Command(OnDeleteSelected);
             AddItemCommand = new Command(OnAddItem);
-            DeleteCommand = new Command<Item>(OnDelete);
-        }
-
-        private async void OnDelete(Item item)
-        {
-            Items.Remove(item);
-            await DataStore.DeleteItemAsync(item.Id);
+            _selectedItem = new ObservableCollection<Item>();
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -67,13 +59,15 @@ namespace XamarinDeleteItem.ViewModels
             SelectedItem = null;
         }
 
-        public Item SelectedItem
+        public ObservableCollection<Item> SelectedItem
         {
             get => _selectedItem;
             set
             {
-                SetProperty(ref _selectedItem, value);
-                OnItemSelected(value);
+                if (_selectedItem != value)
+                {
+                    SetProperty(ref _selectedItem, value);
+                }
             }
         }
 
@@ -82,14 +76,22 @@ namespace XamarinDeleteItem.ViewModels
             await Shell.Current.GoToAsync(nameof(NewItemPage));
         }
 
-        async void OnItemSelected(Item item)
+        async void OnDeleteSelected()
         {
-            if (item == null)
+           if (SelectedItem == null)
+            {
                 return;
-
-
+            }
+           else
+            {
+                foreach (var item in SelectedItem)
+                {
+                    Items.Remove(item);
+                   await DataStore.DeleteItemAsync(item.Id);
+                }
+            }
             // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+           // await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
         }
     }
 }
