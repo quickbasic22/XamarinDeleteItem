@@ -32,62 +32,50 @@
         <ToolbarItem Text="Add" Command="{Binding AddItemCommand}" />
         <ToolbarItem Text="Delete Selected Items" Order="Secondary" Command="{Binding DeleteSelected}" />
     </ContentPage.ToolbarItems>
+
+    <NavigationPage.TitleView>
+        <Label Text="Hello World" />
+    </NavigationPage.TitleView>
+
+    
     <!--
       x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
       https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
     -->
     <RefreshView x:DataType="local:ItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-        <CollectionView x:Name="ItemsListView"
+        <StackLayout>
+            <SearchBar Placeholder="Item Search" PlaceholderColor="Crimson" TextChanged="SearchBar_TextChanged" />
+            <CollectionView x:Name="ItemsListView" NavigationPage.HasNavigationBar="True" NavigationPage.TitleIconImageSource="xamarin_logo.png"
                 ItemsSource="{Binding Items}"
                 SelectionMode="Multiple"
                         SelectionChanged="ItemsListView_SelectionChanged">
-            <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Padding="5" RowSpacing="0" BackgroundColor="LightBlue">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                                <SwipeView>
-                                    <SwipeView.RightItems>
-                                        <SwipeItems Mode="Reveal">
-                                            <SwipeItem Text="Delete" BackgroundColor="Red" Invoked="SwipeItem_Invoked" />
-                                        </SwipeItems>
-                                    </SwipeView.RightItems>
-                                    <StackLayout Padding="20" x:DataType="model:Item">
-                                        <Label Text="{Binding Text}" 
-                            LineBreakMode="NoWrap" Padding="0"
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="5" RowSpacing="0" BackgroundColor="LightBlue">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem Text="Delete" BackgroundColor="Red" Invoked="SwipeItem_Invoked" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <StackLayout Padding="20" x:DataType="model:Item">
+                                    <Label Text="{Binding Text}" 
+                            Padding="0"
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="16"
-                            Grid.Column="0"
                             FontAttributes="Bold" TextColor="Blue" />
-                                        <Label Text="{Binding Description}" 
-                            LineBreakMode="NoWrap"
+                                    <Label Text="{Binding Description}" 
                             Style="{DynamicResource ListItemDetailTextStyle}"
-                            FontSize="13"
-                            Grid.Column="0" />
-                                        <!--<StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer 
-                                NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemsViewModel}}, Path=ItemTapped}"		
-                                CommandParameter="{Binding .}">
-                                </TapGestureRecognizer>
-                            </StackLayout.GestureRecognizers>-->
-                                    </StackLayout>
-                                </SwipeView>
-                            </Grid>
-                        </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                            FontSize="13" />
+                                </StackLayout>
+                            </SwipeView>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
     </RefreshView>
 </ContentPage>

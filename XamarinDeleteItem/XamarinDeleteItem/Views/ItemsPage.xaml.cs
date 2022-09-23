@@ -26,8 +26,6 @@ namespace XamarinDeleteItem.Views
             BindingContext = _viewModel = new ItemsViewModel();
         }
 
-      
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -56,6 +54,30 @@ namespace XamarinDeleteItem.Views
                     _viewModel.SelectedItem.Add(item);
                 }
             }
+        }
+
+        private async void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+            var items = await _viewModel.DataStore.GetItemsAsync();
+            var results = items.Where(a => a.Text.ToLower().StartsWith(e.NewTextValue.ToLower()));
+
+            if (e.NewTextValue != null)
+            {
+                _viewModel.Items.Clear();
+                foreach (var item in results)
+                {
+                    _viewModel.Items.Add(item);
+                }
+            }
+           
+            if (e.NewTextValue == null)
+            {
+                _viewModel.LoadItemsCommand.Execute(null);
+            }
+            
+
+
         }
     }
 }
