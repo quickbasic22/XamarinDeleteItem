@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -19,6 +20,12 @@ namespace XamarinDeleteItem.ViewModels
         public Command AddItemCommand { get; }
         public Command DeleteSelected { get; }
         public Command<Item> DeleteCommand { get; }
+        public Command NextPageCommand { get; set; }
+        public Command PreviousPageCommand { get; set; }
+        private const int thepagesize = 3;
+        private const int thepagenumber = 1;
+        private int pagesize;
+        private int pagenumber;
 
         public ItemsViewModel()
         {
@@ -27,7 +34,47 @@ namespace XamarinDeleteItem.ViewModels
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             DeleteSelected = new Command(OnDeleteSelected);
             AddItemCommand = new Command(OnAddItem);
+            NextPageCommand = new Command(NextPage);
+            PreviousPageCommand = new Command(PreviousPage);
             _selectedItem = new ObservableCollection<Item>();
+            PageSize = thepagesize;
+            PageNumber = thepagenumber;
+        }
+                
+        public int PageSize
+        {
+            get => pagesize;
+            set
+            {
+                if (pagesize != value)
+                SetProperty(ref pagesize, value);
+            }
+        }
+
+        public int PageNumber
+        {
+            get => pagenumber;
+            set
+            {
+                if (pagenumber != value)
+                    SetProperty(ref pagenumber, value);
+            }
+        }
+
+        public void NextPage()
+        {
+            PageNumber++;
+            if (PageNumber > thepagesize)
+                PageNumber = thepagesize;
+           
+        }
+
+        public void PreviousPage()
+        {
+            PageNumber--;
+            if (PageNumber < 0)
+                PageNumber = 0;
+            
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -38,6 +85,9 @@ namespace XamarinDeleteItem.ViewModels
             {
                 Items.Clear();
                 var items = await DataStore.GetItemsAsync(true);
+
+                items = items.Take(PageSize);
+                
                 foreach (var item in items)
                 {
                     Items.Add(item);

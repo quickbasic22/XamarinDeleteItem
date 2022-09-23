@@ -76,6 +76,13 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            <StackLayout>
+                <Grid ColumnDefinitions="*,*" RowDefinitions="auto">
+                    <Button Text="Previous" Grid.Column="0" Command="{Binding PreviousPageCommand}" />
+                    <Button Text="Next" Grid.Column="1" Command="{Binding NextPageCommand}" />
+                </Grid>
+            </StackLayout>
         </StackLayout>
     </RefreshView>
 </ContentPage>
+    

@@ -56,5 +56,10 @@ namespace XamarinDeleteItem.Services
         {
             return await Task.FromResult(items);
         }
+
+        public int GetItemCount()
+        {
+            return items.Count;
+        }
     }
 }

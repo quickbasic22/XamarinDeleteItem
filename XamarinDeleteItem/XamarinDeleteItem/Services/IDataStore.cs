@@ -11,5 +11,6 @@ namespace XamarinDeleteItem.Services
         Task<bool> DeleteItemAsync(string id);
         Task<T> GetItemAsync(string id);
         Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false);
+        int GetItemCount();
     }
 }
