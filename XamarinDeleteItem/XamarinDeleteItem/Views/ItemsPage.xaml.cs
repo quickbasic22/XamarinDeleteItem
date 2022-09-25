@@ -58,7 +58,7 @@ namespace XamarinDeleteItem.Views
 
         private async void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            _viewModel.IsBusy = true;
             var items = await _viewModel.DataStore.GetItemsAsync();
             var results = items.Where(a => a.Text.ToLower().StartsWith(e.NewTextValue.ToLower()));
 
@@ -69,6 +69,7 @@ namespace XamarinDeleteItem.Views
                 {
                     _viewModel.Items.Add(item);
                 }
+                _viewModel.IsBusy = false;
             }
            
             if (e.NewTextValue == null)
